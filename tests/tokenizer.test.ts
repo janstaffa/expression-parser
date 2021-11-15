@@ -1,4 +1,4 @@
-import Tokenizer from '../src/tokenizer';
+import { Tokenizer } from '../src/index';
 test('tries x + 1 in tokenizer', () => {
   expect(Tokenizer.tokenizeToString('x + 1')).toBe('x+1');
 });
@@ -32,14 +32,20 @@ test('tries (2x-5/3x)(2-5) in tokenizer', () => {
   );
 });
 test('tries -x in tokenizer', () => {
-  expect(Tokenizer.tokenizeToString('-x')).toBe('-x');
+  expect(Tokenizer.tokenizeToString('-x')).toBe('-1*x');
 });
 test('tries -x+2 in tokenizer', () => {
-  expect(Tokenizer.tokenizeToString('-x+2')).toBe('-x+2');
+  expect(Tokenizer.tokenizeToString('-x+2')).toBe('-1*x+2');
 });
 test('tries x(-x+2) in tokenizer', () => {
-  expect(Tokenizer.tokenizeToString('x(-x+2)')).toBe('x*(-x+2)');
+  expect(Tokenizer.tokenizeToString('x(-x+2)')).toBe('x*(-1*x+2)');
 });
 test('tries -x(x+2) in tokenizer', () => {
-  expect(Tokenizer.tokenizeToString('-x(x+2)')).toBe('-x*(x+2)');
+  expect(Tokenizer.tokenizeToString('-x(x+2)')).toBe('-1*x*(x+2)');
+});
+test('tries xysin(x) in tokenizer', () => {
+  expect(Tokenizer.tokenizeToString('xysin(x)')).toBe('x*y*s*i*n*(x)');
+});
+test('tries min(x, 5) in tokenizer', () => {
+  expect(Tokenizer.tokenizeToString('min(x, 5)')).toBe('min(x,5)');
 });

@@ -2,6 +2,7 @@ type TokenType =
   | 'Literal'
   | 'Operator'
   | 'Function'
+  | 'ArgumentSeparator'
   | 'LParen'
   | 'RParen'
   | 'Var';
@@ -16,10 +17,13 @@ class Token {
   }
 }
 
-const isLiteral = (str: string) => /\d|\./.test(str);
-const isChar = (str: string) => /[a-z]/i.test(str);
-const Tokenizer = {
-  tokenize: (expression: string): Token[] => {
+export const isLiteral = (str: string) => /\d|\./.test(str);
+export const isChar = (str: string) => /[a-z]/i.test(str);
+export const isOperator = (str: string) => /\+|-|\*|\/|\^/.test(str);
+export const isFunction = (str: string) =>
+  /^(sin|cos|tan|min|max|mod)$/.test(str);
+class Tokenizer {
+  tokenize = (expression: string): Token[] => {
     const trimmedExpression = expression.replace(/\s+/g, '');
     const output: Token[] = [];
     let charBuffer = '';
@@ -46,7 +50,7 @@ const Tokenizer = {
             multiplyBuffer.push(new Token('Literal', literalBuffer));
             literalBuffer = '';
           }
-          if (/^(sin|cos|tan)$/.test(charBuffer)) {
+          if (isFunction(charBuffer)) {
             if (multiplyBuffer.length > 0) {
               multiplyBuffer.push(new Token('Function', charBuffer));
             } else {
@@ -64,6 +68,9 @@ const Tokenizer = {
             }
           }
           charBuffer = '';
+        }
+        if (char === ',') {
+          output.push(new Token('ArgumentSeparator', char));
         }
         if (literalBuffer.length > 0) {
           if (char === '(') {
@@ -88,10 +95,10 @@ const Tokenizer = {
         }
 
         // is operator
-        if (/\+|-|\*|\/|\^/.test(char)) {
+        if (isOperator(char)) {
           const prevToken = output[output.length - 1];
           if (char === '-' && (!prevToken || prevToken.value === '(')) {
-            literalBuffer += char;
+            literalBuffer += '-1';
           } else {
             output.push(new Token('Operator', char));
           }
@@ -119,12 +126,12 @@ const Tokenizer = {
       }
     }
     return output;
-  },
+  };
 
-  tokenizeToString: (expression: string) => {
-    const arr = Tokenizer.tokenize(expression);
+  tokenizeToString = (expression: string) => {
+    const arr = this.tokenize(expression);
     return arr.map((t) => t.value).join('');
-  },
-};
+  };
+}
 
 export default Tokenizer;
