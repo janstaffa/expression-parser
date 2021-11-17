@@ -7,4 +7,8 @@ export { Parser, Tokenizer };
 // const exp = '2-(x+2(x-5))';
 // console.log(exp, Tokenizer.tokenize(exp));
 
-// console.log(Parser.evaluate('2x(x-5)^2', { x: 10 }));
+// console.log(Parser.evaluate('cos(x)', { x: 10 }));
+
+// TODO:
+// check for function argument length in tokenizer
+// convert sqrt(x) to root(x, 2) in tokenizer

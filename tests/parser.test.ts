@@ -42,3 +42,36 @@ test('tries x^2 (with x: 2) in evaluator', () => {
 test('tries 2x(x-5)^2 (with x: 10) in evaluator', () => {
   expect(Parser.evaluate('2x(x-5)^2', { x: 10 })).toBe('500');
 });
+test('tries abs(x) (with x: -10) in evaluator', () => {
+  expect(Parser.evaluate('abs(x)', { x: -10 })).toBe('10');
+});
+test('tries sin(x) (with x: 10) in evaluator', () => {
+  expect(Parser.evaluate('sin(x)', { x: 10 })).toBe('0.17364817766693033');
+});
+test('tries cos(x) (with x: 10) in evaluator', () => {
+  expect(Parser.evaluate('cos(x)', { x: 10 })).toBe('0.984807753012208');
+});
+test('tries tan(x) (with x: 10) in evaluator', () => {
+  expect(Parser.evaluate('tan(x)', { x: 10 })).toBe('0.17632698070846498');
+});
+test('tries min(5, 10) in evaluator', () => {
+  expect(Parser.evaluate('min(5, 10)')).toBe('5');
+});
+test('tries max(5, 10) in evaluator', () => {
+  expect(Parser.evaluate('max(5, 10)')).toBe('10');
+});
+test('tries sqrt(9) in evaluator', () => {
+  expect(Parser.evaluate('sqrt(9)')).toBe('3');
+});
+test('tries root(8, 3) in evaluator', () => {
+  expect(Parser.evaluate('root(8, 3)')).toBe('2');
+});
+test('tries mod(25, 6) in evaluator', () => {
+  expect(Parser.evaluate('mod(25, 7)')).toBe('4');
+});
+test('tries mod(25, 5) in evaluator', () => {
+  expect(Parser.evaluate('mod(25, 5)')).toBe('0');
+});
+test('tries 3+4*2/(1-5)^2^3 in evaluator', () => {
+  expect(Parser.evaluate('3+4*2/(1-5)^2^3')).toBe('3.0001220703125');
+});

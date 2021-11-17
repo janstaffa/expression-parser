@@ -21,7 +21,7 @@ export const isLiteral = (str: string) => /\d|\./.test(str);
 export const isChar = (str: string) => /[a-z]/i.test(str);
 export const isOperator = (str: string) => /\+|\-|\*|\/|\^/.test(str);
 export const isFunction = (str: string) =>
-  /^(sin|cos|tan|min|max|mod|sqrt|root)$/.test(str);
+  /^(sin|cos|tan|min|max|mod|sqrt|root|abs)$/.test(str);
 class Tokenizer {
   tokenize = (expression: string): Token[] => {
     const trimmedExpression = expression.replace(/\s+/g, '');

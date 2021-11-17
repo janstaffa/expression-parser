@@ -3,13 +3,24 @@ import { Token } from './tokenizer';
 
 class Parser {
   private OPS: {
-    [key: string]: { assoc: 'left' | 'right'; prec: number; args: number };
+    [key: string]: { assoc: 'left' | 'right'; prec: number };
   } = {
-    '^': { assoc: 'right', prec: 4, args: 2 },
-    '*': { assoc: 'left', prec: 3, args: 2 },
-    '/': { assoc: 'left', prec: 3, args: 2 },
-    '+': { assoc: 'left', prec: 2, args: 2 },
-    '-': { assoc: 'left', prec: 2, args: 2 },
+    '^': { assoc: 'right', prec: 4 },
+    '*': { assoc: 'left', prec: 3 },
+    '/': { assoc: 'left', prec: 3 },
+    '+': { assoc: 'left', prec: 2 },
+    '-': { assoc: 'left', prec: 2 },
+  };
+  private FUNC_ARGS: { [key: string]: number } = {
+    sin: 1,
+    cos: 1,
+    tan: 1,
+    sqrt: 1,
+    root: 2,
+    abs: 1,
+    max: 2,
+    min: 2,
+    mod: 2,
   };
   /**
    * @param expression The mathematical expression to be calculated.
@@ -17,60 +28,158 @@ class Parser {
    */
 
   //actually calculate the expression with unknowns passed as args
-  evaluate = (expression: string, unknowns?: { [key: string]: number }) => {
-    // replace unknowns with literal values
-
+  evaluate = (
+    expression: string,
+    unknowns?: { [key: string]: number },
+    flags: { useRadians: boolean } | undefined = { useRadians: false }
+  ) => {
     const parsed = this.parse(expression);
 
-    const usesUnknowns = parsed.find((t) => t?.type === 'Var');
-    if (usesUnknowns && !unknowns) {
-      throw new Error(
-        `Cannot evaluate expression: '${expression}' without knowing all unknown variables.`
-      );
-    }
-    while (parsed.length > 1) {
+    do {
       for (const [idx, token] of parsed.entries()) {
         if (!token) continue;
 
         if (token.type === 'Var') {
-          parsed[idx] = new Token('Literal', unknowns![token.value].toString());
+          const unknownValue = unknowns?.[token.value];
+          if (!unknownValue) {
+            throw new Error(
+              `Literal value for unknown '${token.value}' was not provided.`
+            );
+          }
+
+          parsed[idx] = new Token('Literal', unknownValue.toString());
+          continue;
         } else if (token.type === 'Operator') {
           let result;
-          const arg2 = parsed[idx - 1];
           const arg1 = parsed[idx - 2];
+          const arg2 = parsed[idx - 1];
 
           if (
             !arg1 ||
             !arg2 ||
             arg1.type !== 'Literal' ||
             arg2.type !== 'Literal'
-          )
-            return;
+          ) {
+            throw new Error(`Error evaluating expression '${expression}'.`);
+          }
+
           switch (token.value) {
             case '+':
-              result = parseInt(arg1.value) + parseInt(arg2.value);
+              result = parseFloat(arg1.value) + parseFloat(arg2.value);
               break;
             case '-':
-              result = parseInt(arg1.value) - parseInt(arg2.value);
+              result = parseFloat(arg1.value) - parseFloat(arg2.value);
               break;
             case '*':
-              result = parseInt(arg1.value) * parseInt(arg2.value);
+              result = parseFloat(arg1.value) * parseFloat(arg2.value);
               break;
             case '/':
-              result = parseInt(arg1.value) / parseInt(arg2.value);
+              result = parseFloat(arg1.value) / parseFloat(arg2.value);
               break;
             case '^':
-              result = Math.pow(parseInt(arg1.value), parseInt(arg2.value));
+              result = Math.pow(parseFloat(arg1.value), parseFloat(arg2.value));
               break;
           }
 
-          if (result === undefined) return;
+          if (result === undefined)
+            throw new Error(`Error evaluating expression '${expression}'.`);
           // replace parameters and operator with result
           parsed.splice(idx - 2, 3, new Token('Literal', result.toString()));
           break;
+        } else if (token.type === 'Function') {
+          const argCount = this.FUNC_ARGS[token.value];
+          if (!argCount) throw new Error(`Unknown function '${token.value}''.`);
+          const args = parsed.slice(idx - argCount, idx);
+          if (!args || args.length === 0) {
+            throw new Error(
+              `Function '${token.value}' requires ${argCount} arguments.`
+            );
+          }
+          let result;
+
+          switch (token.value) {
+            case 'sin':
+            case 'cos':
+            case 'tan':
+              {
+                const arg = args[0]?.value;
+                if (!arg) break;
+                const realValue = flags.useRadians
+                  ? parseFloat(arg)
+                  : parseFloat(arg) * (Math.PI / 180);
+                switch (token.value) {
+                  case 'sin':
+                    result = Math.sin(realValue);
+                    break;
+                  case 'cos':
+                    result = Math.cos(realValue);
+                    break;
+                  case 'tan':
+                    result = Math.tan(realValue);
+                    break;
+                }
+              }
+              break;
+            case 'sqrt':
+              {
+                const arg = args[0]?.value;
+                if (!arg) break;
+                result = Math.sqrt(parseFloat(arg));
+              }
+              break;
+            case 'root':
+              {
+                const arg1 = args[0]?.value;
+                const arg2 = args[1]?.value;
+                if (!arg1 || !arg2) break;
+                result = Math.pow(parseFloat(arg1), 1 / parseFloat(arg2));
+              }
+              break;
+
+            case 'abs':
+              {
+                const arg = args[0]?.value;
+                if (!arg) break;
+                result = Math.abs(parseFloat(arg));
+              }
+              break;
+            case 'max':
+              {
+                const arg1 = args[0]?.value;
+                const arg2 = args[1]?.value;
+                if (!arg1 || !arg2) break;
+                result = Math.max(parseFloat(arg1), parseFloat(arg2));
+              }
+              break;
+            case 'min':
+              {
+                const arg1 = args[0]?.value;
+                const arg2 = args[1]?.value;
+                if (!arg1 || !arg2) break;
+                result = Math.min(parseFloat(arg1), parseFloat(arg2));
+              }
+              break;
+            case 'mod':
+              {
+                const arg1 = args[0]?.value;
+                const arg2 = args[1]?.value;
+                if (!arg1 || !arg2) break;
+                result = parseFloat(arg1) % parseFloat(arg2);
+              }
+              break;
+          }
+          if (result === undefined)
+            throw new Error(`Error evaluating expression '${expression}'.`);
+          // replace parameters and operator with result
+          parsed.splice(
+            idx - argCount,
+            argCount + 1,
+            new Token('Literal', result.toString())
+          );
+          break;
         }
       }
-    }
+    } while (parsed.length > 1);
     return parsed[0]?.value;
   };
 
