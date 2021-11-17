@@ -190,46 +190,72 @@ class Parser {
     const outQueue = [];
     const opStack = [];
 
+    let absPipeCount = 0;
     for (const t of tokens) {
       const { type, value } = t;
-      if (/^(Literal|Var)$/.test(type)) {
-        outQueue.push(t);
-      } else if (type === 'Function') {
-        opStack.push(t);
-      } else if (type === 'ArgumentSeparator') {
-        while (opStack[opStack.length - 1]?.type !== 'LParen') {
-          outQueue.push(opStack.pop());
-        }
-      } else if (type === 'Operator') {
-        while (
-          opStack[opStack.length - 1] &&
-          opStack[opStack.length - 1].type === 'Operator'
-        ) {
-          const o = opStack[opStack.length - 1];
-          const tAssoc = this.OPS[value].assoc;
-          const tPrec = this.OPS[value].prec;
-          const oPrec = this.OPS[o.value].prec;
-          if (tPrec < oPrec || (tAssoc === 'left' && tPrec === oPrec)) {
+
+      switch (type) {
+        case 'Literal':
+        case 'Var':
+          outQueue.push(t);
+          break;
+        case 'Function':
+        case 'LParen':
+          opStack.push(t);
+          break;
+        case 'ArgumentSeparator':
+          while (opStack[opStack.length - 1]?.type !== 'LParen') {
             outQueue.push(opStack.pop());
-          } else {
-            break;
           }
-        }
-        opStack.push(t);
-      } else if (type === 'LParen') {
-        opStack.push(t);
-      } else if (type === 'RParen') {
-        while (
-          opStack[opStack.length - 1] &&
-          opStack[opStack.length - 1].type !== 'LParen'
-        ) {
-          outQueue.push(opStack.pop());
-        }
-        opStack.pop();
-        const lastOp = opStack[opStack.length - 1];
-        if (lastOp && lastOp.type === 'Function') {
-          outQueue.push(opStack.pop());
-        }
+          break;
+        case 'Operator':
+          while (
+            opStack[opStack.length - 1] &&
+            opStack[opStack.length - 1].type === 'Operator'
+          ) {
+            const o = opStack[opStack.length - 1];
+            const tAssoc = this.OPS[value].assoc;
+            const tPrec = this.OPS[value].prec;
+            const oPrec = this.OPS[o.value].prec;
+            if (tPrec < oPrec || (tAssoc === 'left' && tPrec === oPrec)) {
+              outQueue.push(opStack.pop());
+            } else {
+              break;
+            }
+          }
+          opStack.push(t);
+          break;
+        case 'RParen':
+          while (
+            opStack[opStack.length - 1] &&
+            opStack[opStack.length - 1].type !== 'LParen'
+          ) {
+            outQueue.push(opStack.pop());
+          }
+          opStack.pop();
+          const lastOp = opStack[opStack.length - 1];
+          if (lastOp && lastOp.type === 'Function') {
+            outQueue.push(opStack.pop());
+          }
+          break;
+        case 'AbsPipe':
+          absPipeCount++;
+          if (absPipeCount % 2 === 0) {
+            while (
+              opStack[opStack.length - 1] &&
+              opStack[opStack.length - 1].type !== 'AbsPipe'
+            ) {
+              outQueue.push(opStack.pop());
+            }
+
+            outQueue.push(new Token('Function', 'abs'));
+            // remove the abs pipe
+            opStack.pop();
+            // absPipeCount = 0;
+          } else {
+            opStack.push(t);
+          }
+          break;
       }
     }
     while (opStack.length > 0) {

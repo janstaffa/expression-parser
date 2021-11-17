@@ -4,11 +4,13 @@ const Tokenizer = new TokenizerClass();
 const Parser = new ParserClass();
 export { Parser, Tokenizer };
 
-// const exp = '2-(x+2(x-5))';
-// console.log(exp, Tokenizer.tokenize(exp));
-
-// console.log(Parser.evaluate('cos(x)', { x: 10 }));
-
 // TODO:
 // check for function argument length in tokenizer
 // convert sqrt(x) to root(x, 2) in tokenizer
+// convert |x| to abs(x) in tokenizer -> more complex (nested) abs values don't work!
+
+// |x-2| === abs(x-2)
+// |2|x-2| - 1|
+// |(2|x-2| - 1)|
+
+console.log(Parser.parse('|x|'));

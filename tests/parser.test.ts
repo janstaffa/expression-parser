@@ -25,6 +25,15 @@ test('tries 3-5*5 in parser', () => {
 test('tries sin(max(2, 3)/3*x) in parser', () => {
   expect(Parser.parseToString('sin(max(2, 3)/3*x)')).toBe('23max3/x*sin');
 });
+test('tries 2(x-2) in parser', () => {
+  expect(Parser.parseToString('2(x-2)')).toBe('2x2-*');
+});
+test('tries 2[x-2] in parser', () => {
+  expect(Parser.parseToString('2[x-2]')).toBe('2x2-*');
+});
+test('tries 2{x-2} in parser', () => {
+  expect(Parser.parseToString('2{x-2}')).toBe('2x2-*');
+});
 
 // evaluation tests
 test('tries 5+5 in evaluator', () => {
@@ -74,4 +83,16 @@ test('tries mod(25, 5) in evaluator', () => {
 });
 test('tries 3+4*2/(1-5)^2^3 in evaluator', () => {
   expect(Parser.evaluate('3+4*2/(1-5)^2^3')).toBe('3.0001220703125');
+});
+test('tries 2(5-2) in parser', () => {
+  expect(Parser.evaluate('2(5-2)')).toBe('6');
+});
+test('tries 2[5-2] in parser', () => {
+  expect(Parser.evaluate('2[5-2]')).toBe('6');
+});
+test('tries 2{5-2} in parser', () => {
+  expect(Parser.evaluate('2{5-2}')).toBe('6');
+});
+test('tries |x| in parser', () => {
+  expect(Parser.evaluate('|x|', { x: -5 })).toBe('5');
 });
