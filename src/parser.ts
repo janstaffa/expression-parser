@@ -1,5 +1,4 @@
-import { Tokenizer } from '.';
-import { Token } from './tokenizer';
+import Tokenizer, { Token } from './tokenizer';
 
 class Parser {
   private OPS: {
@@ -294,4 +293,4 @@ class Parser {
   };
 }
 
-export default Parser;
+export default new Parser();

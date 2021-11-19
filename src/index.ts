@@ -1,5 +1,4 @@
-import ParserClass from './parser';
-import TokenizerClass from './tokenizer';
-const Tokenizer = new TokenizerClass();
-const Parser = new ParserClass();
-export { Parser, Tokenizer };
+import Parser from './parser';
+const evaluate = Parser.evaluate;
+const parse = Parser.parseToString;
+export default { evaluate, parse };
