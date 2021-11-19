@@ -49,7 +49,15 @@ test("tries xysin(x) in tokenizer", () => {
 test("tries min(x, 5) in tokenizer", () => {
   expect(Tokenizer.tokenizeToString("min(x, 5)")).toBe("min(x,5)");
 });
-
 test("tries 3+4*2/(1-5)^2^3 in tokenizer", () => {
   expect(Tokenizer.tokenizeToString("3+4*2/(1-5)^2^3")).toBe("3+4*2/(1-5)^2^3");
+});
+test("tries |x-5| in tokenizer", () => {
+  expect(Tokenizer.tokenizeToString("abs(x-5)")).toBe("abs(x-5)");
+});
+test("tries ||x-5|-1| in tokenizer", () => {
+  expect(Tokenizer.tokenizeToString("abs(abs(x-5)-1)")).toBe("abs(abs(x-5)-1)");
+});
+test("tries -1 in tokenizer", () => {
+  expect(Tokenizer.tokenizeToString("-1")).toBe("-1*1");
 });
