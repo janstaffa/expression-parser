@@ -140,7 +140,7 @@ class Tokenizer {
         let i = 1;
         if (rightBracketRegex.test(lastChar)) {
           while (!leftBracketRegex.test(output[output.length - i]?.value)) {
-            if (i > 500) throw new Error('Invalid syntax');
+            if (i > 500) throw new Error('Too many iterations.');
             i++;
           }
         } else {
