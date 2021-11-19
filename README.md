@@ -5,12 +5,16 @@ Math expression parser implementation in Typescript.
 ## API
 
 ```js
+// evaluate an expression
 Parser.evaluate('EXPRESSION', {
   // variable values if you use variables in the expression
   x: 5,
   y: 5
   ...
 }, PARSER_OPTIONS);
+
+// parse an expression into RPN(Reverse Polish notation)
+Parser.parse('EXPRESSION');
 ```
 ### options
 | option     | description                                        | default |
