@@ -1,9 +1,12 @@
 {
   "name": "expression-parser",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/janstaffa/expression-parser.git",
-  "author": "Jan Šfaffa <agenttupesy@gmail.com>",
+  "bugs": "https://github.com/janstaffa/expression-parser/issues",
+  "homepage": "https://github.com/janstaffa/expression-parser",
+  "author": "janstaffa (https://janstaffa.cz)",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.0.2",

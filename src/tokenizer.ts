@@ -38,11 +38,7 @@ class Tokenizer {
 
       // is char
       if (isChar(char)) {
-        if (multiplyBuffer.length > 0) {
-          multiplyBuffer.push(new Token('Var', char));
-        } else {
-          charBuffer += char;
-        }
+        charBuffer += char;
 
         if (!isLast) continue;
       }
@@ -172,4 +168,4 @@ class Tokenizer {
   };
 }
 
-export default Tokenizer;
+export default new Tokenizer();
