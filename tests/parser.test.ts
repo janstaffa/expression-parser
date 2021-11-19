@@ -96,3 +96,18 @@ test("tries 2{5-2} in parser", () => {
 test("tries abs(x) in parser", () => {
   expect(Parser.evaluate("abs(x)", { x: -5 })).toBe("5");
 });
+test("tries x! in parser", () => {
+  expect(Parser.evaluate("x!", { x: 5 })).toBe("120");
+});
+test("tries x! in parser", () => {
+  expect(Parser.evaluate("x!", { x: -5 })).toBe("NaN");
+});
+test("tries -x! in parser", () => {
+  expect(Parser.evaluate("-x!", { x: 5 })).toBe("-120");
+});
+test("tries (x+5)! in parser", () => {
+  expect(Parser.evaluate("(x+5)!", { x: 5 })).toBe("3628800");
+});
+test("tries -x! in parser", () => {
+  expect(Parser.evaluate("-x!", { x: 5 })).toBe("-120");
+});

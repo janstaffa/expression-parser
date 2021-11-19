@@ -21,6 +21,7 @@ class Parser {
     max: 2,
     min: 2,
     mod: 2,
+    fac: 1,
   };
   /**
    * @param expression The mathematical expression to be calculated.
@@ -165,6 +166,23 @@ class Parser {
                 const arg2 = args[1]?.value;
                 if (!arg1 || !arg2) break;
                 result = parseFloat(arg1) % parseFloat(arg2);
+              }
+              break;
+            case "fac":
+              {
+                const arg = args[0]?.value;
+                if (!arg) break;
+                let count = parseFloat(arg);
+                if (count < 0) {
+                  result = NaN;
+                  break;
+                }
+                let subResult = count;
+                while (count > 1) {
+                  count--;
+                  subResult *= count;
+                }
+                result = subResult;
               }
               break;
           }
