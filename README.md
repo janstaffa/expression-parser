@@ -1,10 +1,20 @@
 # expression-parser
 
 Math expression parser implementation in Typescript.
+## install
+```console
+// with yarn (prefered)
+yarn add janstaffa/expression-parser
 
+// with npm
+npm install https://github.com/janstaffa/expression-parser
+
+```
 ## API
 
 ```js
+import Parser from 'expression-parser';
+
 // evaluate an expression
 Parser.evaluate('EXPRESSION', {
   // variable values if you use variables in the expression
