@@ -63,18 +63,20 @@ Parser.parse('EXPRESSION');
 | !      | factorial | 5! => 120 |
 
 ### 4. functions
-| function | description    | usage               |
-|----------|----------------|---------------------|
-| sqrt     | sqare root     | sqrt(9) => 3        |
-| root     | any root       | root(8, 3) => 2     |
-| sin      | sine value     | sin(90) => 1        |
-| cos      | cosine value   | cos(60) => 0.5      |
-| tan      | tangens value  | tan(45) => 1        |
-| abs      | absolute value | abs(-5) => 5        |
-| max      | greater of two | max(5, 10) => 10    |
-| min      | smaller of two | min(5, 10) => 5     |
-| mod      | modulo         | mod(10, 3) => 1     |
-| fac      | factorial      | fac(5) or 5! => 120 |
+| function | description              | usage               |
+|----------|--------------------------|---------------------|
+| sqrt     | sqare root               | sqrt(9) => 3        |
+| root     | any root                 | root(8, 3) => 2     |
+| sin      | sine value               | sin(90) => 1        |
+| cos      | cosine value             | cos(60) => 0.5      |
+| tan      | tangens value            | tan(45) => 1        |
+| abs      | absolute value           | abs(-5) => 5        |
+| max      | greater of two           | max(5, 10) => 10    |
+| min      | smaller of two           | min(5, 10) => 5     |
+| mod      | modulo                   | mod(10, 3) => 1     |
+| fac      | factorial                | fac(5) or 5! => 120 |
+| round    | round to closest number  | round(0.9) => 1     |
+| int      | removes all decimals     | int(0.9) => 0       |
 
 ### 5. complex operations
 ```js
