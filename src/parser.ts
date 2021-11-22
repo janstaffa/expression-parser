@@ -41,6 +41,8 @@ class Parser {
     min: 2,
     mod: 2,
     fac: 1,
+    round: 1,
+    int: 1,
   };
   /**
    * @param expression The mathematical expression to be calculated.
@@ -205,6 +207,21 @@ class Parser {
                 result = parsed * gamma(parsed);
               }
               break;
+            case 'round':
+              {
+                const arg = args[0]?.value;
+                if (!arg) break;
+                let parsed = parseFloat(arg);
+                result = Math.round(parsed);
+              }
+              break;
+
+            case 'int': {
+              const arg = args[0]?.value;
+              if (!arg) break;
+              let parsed = parseInt(arg);
+              result = Math.trunc(parsed);
+            }
           }
           if (result === undefined)
             throw new Error(`Error evaluating expression '${expression}'.`);

@@ -21,7 +21,7 @@ export const isLiteral = (str: string) => /\d|\./.test(str);
 export const isChar = (str: string) => /[a-z]/i.test(str);
 export const isOperator = (str: string) => /\+|\-|\*|\/|\^/.test(str);
 export const isFunction = (str: string) =>
-  /^(sin|cos|tan|min|max|mod|sqrt|root|abs|fac)$/.test(str);
+  /^(sin|cos|tan|min|max|mod|sqrt|root|abs|fac|round|int)$/.test(str);
 const leftBracketRegex = /\(|\[|\{/;
 const rightBracketRegex = /\)|\]|\}/;
 class Tokenizer {
