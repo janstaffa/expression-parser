@@ -67,7 +67,7 @@ class Parser {
 
         if (token.type === 'Var') {
           const unknownValue = unknowns?.[token.value];
-          if (!unknownValue) {
+          if (typeof unknownValue !== 'number') {
             throw new Error(
               `Literal value for unknown '${token.value}' was not provided.`
             );
@@ -238,7 +238,6 @@ class Parser {
     const outQueue = [];
     const opStack = [];
 
-    let absPipeCount = 0;
     for (const t of tokens) {
       const { type, value } = t;
 
@@ -253,6 +252,7 @@ class Parser {
           break;
         case 'ArgumentSeparator':
           while (opStack[opStack.length - 1]?.type !== 'LParen') {
+            if (opStack.length === 0) break;
             outQueue.push(opStack.pop());
           }
           break;
@@ -261,6 +261,7 @@ class Parser {
             opStack[opStack.length - 1] &&
             opStack[opStack.length - 1].type === 'Operator'
           ) {
+            if (opStack.length === 0) break;
             const o = opStack[opStack.length - 1];
             const tAssoc = this.OPS[value].assoc;
             const tPrec = this.OPS[value].prec;
@@ -278,6 +279,7 @@ class Parser {
             opStack[opStack.length - 1] &&
             opStack[opStack.length - 1].type !== 'LParen'
           ) {
+            if (opStack.length === 0) break;
             outQueue.push(opStack.pop());
           }
           opStack.pop();
