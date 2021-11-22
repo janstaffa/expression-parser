@@ -114,3 +114,27 @@ test('tries -x! in parser', () => {
 test('tries -max(5, 10) in parser', () => {
   expect(Parser.evaluate('-max(5, 10)')).toBe(-10);
 });
+test('tries round(0.1) in parser', () => {
+  expect(Parser.evaluate('round(0.1)')).toBe(0);
+});
+test('tries round(0.3) in parser', () => {
+  expect(Parser.evaluate('round(0.3)')).toBe(0);
+});
+test('tries round(0.5) in parser', () => {
+  expect(Parser.evaluate('round(0.5)')).toBe(1);
+});
+test('tries round(0.9) in parser', () => {
+  expect(Parser.evaluate('round(0.9)')).toBe(1);
+});
+test('tries int(0.9) in parser', () => {
+  expect(Parser.evaluate('int(0.9)')).toBe(0);
+});
+test('tries int(0.1) in parser', () => {
+  expect(Parser.evaluate('int(0.1)')).toBe(0);
+});
+test('tries int(1.9) in parser', () => {
+  expect(Parser.evaluate('int(1.9)')).toBe(1);
+});
+test('tries int(1.1) in parser', () => {
+  expect(Parser.evaluate('int(1.1)')).toBe(1);
+});
