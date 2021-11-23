@@ -192,7 +192,10 @@ class Parser {
                 const arg1 = args[0]?.value;
                 const arg2 = args[1]?.value;
                 if (!arg1 || !arg2) break;
-                result = Math.abs(parseFloat(arg1) % parseFloat(arg2));
+                const parsed1 = parseFloat(arg1);
+                const parsed2 = parseFloat(arg2);
+
+                result = ((parsed1 % parsed2) + parsed2) % parsed2;
               }
               break;
             case 'fac':

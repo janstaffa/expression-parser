@@ -87,6 +87,9 @@ test('tries mod(-5, 2) in evaluator', () => {
 test('tries mod(-5, 5) in evaluator', () => {
   expect(Parser.evaluate('mod(-5, 5)')).toBe(0);
 });
+test('tries mod(-1.5, 2) in evaluator', () => {
+  expect(Parser.evaluate('mod(-1.5, 2)')).toBe(0.5);
+});
 test('tries 3+4*2/(1-5)^2^3 in evaluator', () => {
   expect(Parser.evaluate('3+4*2/(1-5)^2^3')).toBe(3.0001);
 });

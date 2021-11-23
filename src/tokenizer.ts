@@ -44,11 +44,7 @@ class Tokenizer {
       }
       // is literal
       else if (isLiteral(char)) {
-        if (multiplyBuffer.length > 0) {
-          multiplyBuffer.push(new Token('Literal', char));
-        } else {
-          literalBuffer += char;
-        }
+        literalBuffer += char;
         if (!isLast) continue;
       }
 
@@ -80,7 +76,7 @@ class Tokenizer {
       }
       if (literalBuffer.length > 0) {
         // if the literal is before LParen ex:'2(x)', use it as multiplier
-        if (leftBracketRegex.test(char)) {
+        if (leftBracketRegex.test(char) || multiplyBuffer.length > 0) {
           multiplyBuffer.push(new Token('Literal', literalBuffer));
         } else {
           output.push(new Token('Literal', literalBuffer));
